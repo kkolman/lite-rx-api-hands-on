@@ -13,34 +13,32 @@ import reactor.test.StepVerifier;
  */
 public class Part06Request {
 
-	ReactiveRepository<User> repository = new ReactiveUserRepository();
+    ReactiveRepository<User> repository = new ReactiveUserRepository();
 
-//========================================================================================
+    StepVerifier requestAllExpectFour(Flux<User> flux) {
+        return StepVerifier.create(flux)
+                .expectNextCount(4L)
+                .expectComplete();
+    }
 
-	// TODO Create a StepVerifier that initially requests all values and expect 4 values to be received
-	StepVerifier requestAllExpectFour(Flux<User> flux) {
-		return null;
-	}
+    StepVerifier requestOneExpectSkylerThenRequestOneExpectJesse(Flux<User> flux) {
+        Flux<User> loggingFlux = flux.log();
+        return StepVerifier.create(loggingFlux)
+                .expectNext(User.SKYLER)
+                .expectNext(User.JESSE)
+                .thenCancel();
 
-//========================================================================================
+    }
 
-	// TODO Create a StepVerifier that initially requests 1 value and expects User.SKYLER then requests another value and expects User.JESSE.
-	StepVerifier requestOneExpectSkylerThenRequestOneExpectJesse(Flux<User> flux) {
-		return null;
-	}
+    Flux<User> fluxWithLog() {
+        return repository.findAll().log();
+    }
 
-//========================================================================================
-
-	// TODO Return a Flux with all users stored in the repository that prints automatically logs for all Reactive Streams signals
-	Flux<User> fluxWithLog() {
-		return null;
-	}
-
-//========================================================================================
-
-	// TODO Return a Flux with all users stored in the repository that prints "Starring:" on subscribe, "firstname lastname" for all values and "The end!" on complete
-	Flux<User> fluxWithDoOnPrintln() {
-		return null;
-	}
+    Flux<User> fluxWithDoOnPrintln() {
+        return repository.findAll()
+                .doOnSubscribe(subscriber -> System.out.println("Starting: " + subscriber))
+                .doOnNext(u -> System.out.println(String.format("%s - %s", u.getFirstname(), u.getLastname())))
+                .doOnComplete(() -> System.out.println("The end !"));
+    }
 
 }

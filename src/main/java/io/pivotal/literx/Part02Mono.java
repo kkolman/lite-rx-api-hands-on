@@ -10,32 +10,20 @@ import reactor.core.publisher.Mono;
  */
 public class Part02Mono {
 
-//========================================================================================
+    Mono<String> emptyMono() {
+        return Mono.empty();
+    }
 
-	// TODO Return an empty Mono
-	Mono<String> emptyMono() {
-		return null;
-	}
+    Mono<String> monoWithNoSignal() {
+        return Mono.never();
+    }
 
-//========================================================================================
+    Mono<String> fooMono() {
+        return Mono.just("foo");
+    }
 
-	// TODO Return a Mono that never emits any signal
-	Mono<String> monoWithNoSignal() {
-		return null;
-	}
-
-//========================================================================================
-
-	// TODO Return a Mono that contains a "foo" value
-	Mono<String> fooMono() {
-		return null;
-	}
-
-//========================================================================================
-
-	// TODO Create a Mono that emits an IllegalStateException
-	Mono<String> errorMono() {
-		return null;
-	}
+    Mono<String> errorMono() {
+        return Mono.error(new IllegalStateException());
+    }
 
 }
